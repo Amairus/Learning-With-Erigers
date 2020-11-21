@@ -39,7 +39,6 @@ const AuthController = class{
       //Find User with the current Name
       if(!email || !password){return this.res.status(401).send(); }
       UsersDB.findOne({Email: email}, function(err, user) {
-        console.log(hash);
         if(err) throw err;
         if(!user) { console.log('User not found');return callback('User not found!');}
         else{ 
@@ -53,7 +52,7 @@ const AuthController = class{
           }
         });
       }
-      });   
+      });
     });
     }
 
