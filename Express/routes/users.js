@@ -1,21 +1,21 @@
 const { json } = require("body-parser");
 var express = require("express");
+const AuthController = require("../controllers/AuthController");
 var router = express.Router();
-var fs = require("fs");
+const Auth = AuthController;
+
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   next();
   // res.send({message: 'respond with a resource'});
 });
 
-//Page created which returns 5 users read from users.txt found at public folder , retured in a JSON form.
-let data;
-fs.readFile("./public/users.txt", (err, content) => {
-  if (err) throw err;
-  data = content.toString();
+router.post("/signup" , (req, res, next)=>{
+  new Auth(req,res,next).signup();
 });
 
-router.get("/", (req, res) => {
-  res.send(JSON.parse(JSON.stringify(data)));
+router.post("/login", (req,res,next)=>{
+  new Auth(req,res,next).login();
 });
+
 module.exports = router;

@@ -1,10 +1,14 @@
 let todos = require("../public/todos.json");
 const { validationResult } = require("express-validator");
 const { response } = require("express");
+const mongoose = require('mongoose');
+const TodosDB = mongoose.model("TodosDB");
 
 module.exports = function (req, res) {
   this.getTodos = (req, res) => {
-    res.send(todos);
+  TodosDB.find({} , (err , data) =>{
+    res.send(data);
+  })
   };
 
   this.createTodo = async (req, res, next) => {
