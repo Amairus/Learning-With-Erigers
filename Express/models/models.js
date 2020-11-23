@@ -12,8 +12,8 @@ const bcrypt = require('bcrypt');
 
   const UsersSchema = new mongoose.Schema({
     Name : String,
-    Email: String,
-    Password: String
+    Email: {type:String, required:true ,unique: true},
+    Password: {type:String, required:true}
   });
   // hash the password
   UsersSchema.methods.generateHash = function(password) {

@@ -8,16 +8,21 @@ module.exports = function (req, res) {
   this.getTodos = (req, res) => {
   TodosDB.find({} , (err , data) =>{
     res.send(data);
-  })
+  });
   };
 
+  
   this.createTodo = async (req, res, next) => {
     try {
       // validate if the parameters don't exist throw a meaningful error , else perform the request
-
-      const { name, title } = req.body;
-      todos.push({ name, title });
-      res.send(todos);
+      const {id, title, completed } = req.body;
+      TodosDB.create({
+        UserId:2,
+        id,
+        title,
+        completed 
+      });
+      res.send(`Todo added succesfully`);
     } catch (err) {
       res.send(`An error happened: ${err}`);
     }
@@ -26,34 +31,23 @@ module.exports = function (req, res) {
   this.updateTodo = async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { name, title } = req.body;
-      const el = { id, name, title };
-      todos[el.id - 1] = el;
-      res.send(todos);
+      const { title, completed } = req.body;
+      TodosDB.updateOne({id} , {$set: {title, completed}}, (err, data) =>{
+        if(err) throw new Error(`Error updating the data.`);
+        else { res.send({message:`Todo updated succesfully`})}
+      });
     } catch (err) {
       res.send(`${err}`);
     }
   };
 
-  let deleted = 0;
-  this.deleteTodo = (request, response) => {
-    const { id } = request.params;
-    try {
-      if (id > todos.length || id < 0) {
-        throw new Error("Id was not valid");
-      } else {
-        todos = todos.filter((item) => {
-          return item.id !== id;
-        });
-        deleted++;
-        delete todos[id - deleted];
-        todos = todos.filter(function (el) {
-          return el != null;
-        });
-        response.send(todos);
-      }
-    } catch (err) {
-      response.send(`Upss something went wrong deleting your element: ${err}`);
-    }
+  this.deleteTodo = (req, res) => {
+    try{
+      const { id } = req.params;
+      TodosDB.deleteOne({id}, (err , status)=>{
+      if(err) throw new Error(`Error deleting todo`);
+      res.send(`Todo deleted succesfully`);
+      });
+    }catch(err) { res.send(err);}
   };
 };
