@@ -12,14 +12,15 @@ const AuthController = class{
   }
   
   async signup(){
+  var contr = false;
   const {name , email, password} = this.req.body;
   try{
        //Add User to DB
-       UsersDB.findOne({Email:email},(err,data) =>{
+       await UsersDB.findOne({Email:email},(err,data) =>{
         if(err)throw new Error(`An error happened finding the email configuration.`);
-        if(data) this.res.status(409).json({message:`This email is already taken!`});
+        if(data) { contr = true; this.res.status(409).json({message:`This email is already taken!`})};
        });
-
+       if(!contr){
         const hash = await argon2.hash(password);
           UsersDB.create({
             Name:name,
@@ -29,6 +30,7 @@ const AuthController = class{
             if(err) throw err;
             else this.res.status(201).json({message: `User registered successfully`});
           });
+          }
         
   }catch(err){
       this.res.send(`An error happend: ${err}`);

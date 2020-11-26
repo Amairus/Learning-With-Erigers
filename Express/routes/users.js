@@ -11,6 +11,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/signup" , (req, res, next)=>{
+  console.log('poo');
   new Auth(req,res,next).signup();
 });
 
